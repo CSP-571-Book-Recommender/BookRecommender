@@ -1,3 +1,5 @@
+source(ImportData.R)
+
 library(RCurl)
 library(dplyr)
 library(reshape2)
@@ -6,34 +8,6 @@ library(ggpubr)
 library(DT)
 library(data.table)
 
-###### Reading from local repository
-# books <- read.csv("books.csv", stringsAsFactors = F)
-# tags <- read.csv("tags.csv", stringsAsFactors = F)
-# book_tags <- read.csv("book_tags.csv", stringsAsFactors = F)
-# to_read <- read.csv("to_read.csv", stringsAsFactors = F)
-# ratings <- read.csv("ratings.csv", stringsAsFactors = F)
-
-
-#Reading in the data set directly from the github url
-ratings_url = getURL("https://raw.githubusercontent.com/zygmuntz/goodbooks-10k/master/ratings.csv")
-ratings = read.csv(text = ratings_url)
-rm(ratings_url)
-
-books_url <- getURL("https://raw.githubusercontent.com/zygmuntz/goodbooks-10k/master/books.csv")
-books <- read.csv(text = books_url)
-rm(books_url)
-
-tags_url <- getURL("https://raw.githubusercontent.com/zygmuntz/goodbooks-10k/master/tags.csv")
-tags <- read.csv(text = tags_url)
-rm(tags_url)
-
-book_tags_url <- getURL("https://raw.githubusercontent.com/zygmuntz/goodbooks-10k/master/book_tags.csv")
-book_tags <- read.csv(text = book_tags_url)
-rm(book_tags_url)
-
-to_read_url <- getURL("https://raw.githubusercontent.com/zygmuntz/goodbooks-10k/master/to_read.csv")
-to_read <- read.csv(text = to_read_url)
-rm(to_read_url)
 
 #checking for duplicates
 anyDuplicated(books)
@@ -107,7 +81,7 @@ hist(x = books$original_publication_year, breaks = 1000,
 
 ###### genre frequency distribution
 main_tags_labels = c('romance','fiction','young-adult','fantasy','science-fiction',
-                     'children','best','covers','non-fiction', 'history','mystery',
+                     'children','covers','non-fiction', 'history','mystery',
                      'paranormal','love','horror','historical','sci-fi',
                      'historical-fiction','nonfiction','series','contemporary',
                      'thriller','women','novels','suspense','classics' ,'graphic-novels', 
@@ -130,11 +104,16 @@ book_genre_dist <- as.data.frame(table(book_genres$tag_name))
 names(book_genre_dist) <- c("genre", "Freq")
 book_genre_dist$genre <- as.character(book_genre_dist$genre)
 
-ggplot(book_genre_dist, aes(x=genre, y=Freq)) + 
+bg <- book_genre_dist %>%
+  group_by(genre) %>%
+  arrange(desc(Freq))
+
+#ggplot(bg, aes(reorder(genre, Freq), Freq)) + 
+ggplot(bg, aes(reorder(genre, Freq), Freq))+
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
   labs(title="Frequency Distribution of Genre") + 
   theme(axis.text.x = element_text(angle=0, vjust=0.6)) + 
-  geom_text(aes(label=Freq), hjust = -0.25, vjust= 0.5, color="black", size=3.5)+coord_flip()
+  geom_text(aes(label=Freq), hjust = -0.25, vjust= 0.5, color="black", size=3.5)+ coord_flip()
 
 ###### language frequency distribution
 lang <- as.data.frame(table(books$language_code))
@@ -149,7 +128,7 @@ ggplot(lang, aes(x=Language, y=count)) +
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
   labs(title="Frequency Distribution of Language") + 
   theme(axis.text.x = element_text(angle=0, vjust=0.6)) + 
-  geom_text(aes(label=count), hjust = -0.25, vjust= 0.5, color="black", size=3.5)+coord_flip()
+  geom_text(aes(label=count), hjust = -0.25, vjust= 0.5, color="black", size=3.5)
 
 # top 5 rated books 
 top5_books <- books %>% 
