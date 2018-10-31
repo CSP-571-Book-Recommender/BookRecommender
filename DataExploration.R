@@ -1,6 +1,5 @@
-source(ImportData.R)
+source("ImportData.R")
 
-library(RCurl)
 library(dplyr)
 library(reshape2)
 library(ggplot2)
