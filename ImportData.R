@@ -1,3 +1,5 @@
+library(RCurl)
+
 ###### Reading from local repository
 # books <- read.csv("books.csv", stringsAsFactors = F)
 # tags <- read.csv("tags.csv", stringsAsFactors = F)
