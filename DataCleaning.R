@@ -41,3 +41,6 @@ nrow(eng_book_ratings) # checking no. of ratings before
 eng_book_ratings <- eng_book_ratings[eng_book_ratings$book_id %in% bk_ratings$book_id,]
 nrow(eng_book_ratings) #checking no. of ratings after 
 #################################################################################
+
+#write.csv(all_books, file = "updated_books.csv")
+#write.csv(eng_book_ratings, file = "updated_ratings.csv")
