@@ -240,4 +240,20 @@ total_ratings_matrix <- dcast(data = ratings, user_id~book_id, value.var = "rati
 #                arrange(desc(number_of_ratings)) %>% mutate(rank = c(1:length(number_of_ratings))) %>% filter(rank <= 10) %>%
 #                select(user_id,number_of_ratings)
 
+library(recommenderlab)
+
+####### creating the ratings matrices
+ratings_matrix <- as(as.matrix(ratings_matrix), "realRatingMatrix")
+# save(ratings_matrix, file = "ratings_matrix.RData")
+
+total_ratings_matrix <- as(as.matrix(total_ratings_matrix), "realRatingMatrix")
+# save(total_ratings_matrix, file = "total_ratings_matrix.RData")
+
+####### normalising the ratings matrices
+norm_ratings_mat <- normalize(ratings_matrix)
+norm_total_ratings_mat <- normalize(total_ratings_matrix) 
+
+####### binarising the ratings matrices
+bin_ratings_mat <- binarize(ratings_matrix, minRating = 3)
+bin_total_ratings_mat <- binarize(total_ratings_matrix, minRating = 3) 
 
