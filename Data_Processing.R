@@ -17,12 +17,13 @@ gc()
 # memory.limit(size = 180000)
 real_ratings <- new("realRatingMatrix", data = sparse_ratings)
 real_ratings
-# save(updated_ratings_matrix, file = "updated_ratings_matrix.RData")
+
 
 ####### normalizing the ratings matrices
 normalized_ratings <- normalize(real_ratings)
+save(normalized_ratings, file = "normalized_ratings.RData")
 rec_mod = Recommender(normalized_ratings, method = "UBCF", param=list(method="Cosine",nn=10))
-Top_5_pred = predict(rec_mod, normalized_ratings[], n=10)
+Top_5_pred = predict(rec_mod, normalized_ratings[1,], n=10)
 Top_5_List = as(Top_5_pred, "list")
 Top_5_List
 
@@ -31,6 +32,7 @@ Top5_df <- as.data.frame(Top_5_List)
 names(Top5_df) <- "book_id"
 head(Top5_df)
 Top5_df$book_id <- as.numeric(Top5_df$book_id)
+class(Top5_df$book_id)
 recommended_books = left_join(Top5_df, all_books, by = "book_id")
 recommended_books$title
 class(all_books$book_id)
