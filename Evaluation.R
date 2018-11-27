@@ -28,9 +28,15 @@ diff
 message("n = ",i," done. Time taken = ", diff, " seconds")
 }
 
-min(error_df$rmse)
+plot(x = error_df$nn_values, y = error_df$rmse, xlab = "nn values", ylab = "RMSE", main = "RMSE for different nn values")
+##### there is no variation in the plot. The plot looks like a uniform distribution around a mean.
+##### So we will go ahead and take the nn value corresponding to the lowest error
+
+minimum_error <- min(error_df$rmse)
+minimum_error
+
 minimum_error_nn <- error_df$nn_values[which.min(error_df$rmse)] 
 minimum_error_nn
 
 ######## building the most optimal UBCF Recommender
-opt_reco = Recommender(real_ratings, method = "UBCF", param=list(method="cosine",nn=minimum_error_nn))
+opt_reco <- Recommender(real_ratings, method = "UBCF", param=list(method="cosine",nn=minimum_error_nn))
